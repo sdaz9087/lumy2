@@ -1,13 +1,10 @@
 <!DOCTYPE html>
 <html lang="fa">
-    
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lumy Avatar</title>
-    
     <style>
         body {
             display: flex;
@@ -83,27 +80,6 @@
                 transform: scaleY(0.1);
             }
         }
-        /* این رو برای دستگاه‌های موبایل اضافه کن */
-@media only screen and (max-width: 600px) {
-    body {
-        padding: 10px;
-    }
-
-    .avatar {
-        width: 100px;
-        height: 100px;
-    }
-
-    .message {
-        font-size: 18px;
-        padding: 10px 20px;
-    }
-
-    .eye {
-        width: 15px;
-        height: 20px;
-    }
-}
     </style>
 </head>
 
@@ -170,28 +146,6 @@
             messageElement.style.opacity = "1";
             messageElement.style.transform = "translate(-50%, -50%) scale(1)";
         }
-        const lumy = document.getElementById("lumy");
-const eyes = document.querySelectorAll(".eye");
-let touchX = window.innerWidth / 2, touchY = window.innerHeight / 2;
-
-document.addEventListener("touchmove", (e) => {
-    e.preventDefault();  // جلوگیری از حرکت صفحه
-    touchX = e.touches[0].clientX;
-    touchY = e.touches[0].clientY;
-});
-
-function moveLumy() {
-    const lumyX = parseFloat(getComputedStyle(lumy).left) || window.innerWidth / 2;
-    const lumyY = parseFloat(getComputedStyle(lumy).top) || window.innerHeight / 2;
-    const dx = (touchX - lumyX) * 0.05;
-    const dy = (touchY - lumyY) * 0.05;
-
-    lumy.style.left = `${lumyX + dx}px`;
-    lumy.style.top = `${lumyY + dy}px`;
-    requestAnimationFrame(moveLumy);
-}
-moveLumy();
-
     </script>
 
 </body>
