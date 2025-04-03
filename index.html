@@ -13,9 +13,9 @@
             height: 100vh;
             background: linear-gradient(135deg, #1a1a2e, #ff4d6d);
             overflow: hidden;
+            position: relative;
         }
 
-        /* پیام عاشقانه */
         .message {
             font-size: 24px;
             padding: 15px 30px;
@@ -26,7 +26,7 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, 0) scale(0.8);
+            transform: translate(-50%, -50%) scale(0.8);
             transition: transform 0.6s ease-out, opacity 0.6s ease-out;
             font-family: 'Arial', sans-serif;
         }
@@ -84,7 +84,7 @@
 </head>
 
 <body>
-    <div class="avatar" id="lumy" onclick="showMessage()">
+    <div class="avatar" id="lumy">
         <div class="eye left"></div>
         <div class="eye right"></div>
     </div>
@@ -94,41 +94,53 @@
     <script>
         const lumy = document.getElementById("lumy");
         const eyes = document.querySelectorAll(".eye");
-        let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+        let targetX = window.innerWidth / 2, targetY = window.innerHeight / 2;
+        let currentX = targetX, currentY = targetY;
 
+        // حرکت با ماوس
         document.addEventListener("mousemove", (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
+            targetX = e.clientX;
+            targetY = e.clientY;
         });
 
-        function moveLumy() {
-            const lumyX = parseFloat(getComputedStyle(lumy).left) || window.innerWidth / 2;
-            const lumyY = parseFloat(getComputedStyle(lumy).top) || window.innerHeight / 2;
-            const dx = (mouseX - lumyX) * 0.05;
-            const dy = (mouseY - lumyY) * 0.05;
+        // حرکت با لمس انگشت
+        document.addEventListener("touchmove", (e) => {
+            e.preventDefault();
+            targetX = e.touches[0].clientX;
+            targetY = e.touches[0].clientY;
+        });
 
-            lumy.style.left = `${lumyX + dx}px`;
-            lumy.style.top = `${lumyY + dy}px`;
+        // انیمیشن حرکت Lumy
+        function moveLumy() {
+            currentX += (targetX - currentX) * 0.1;
+            currentY += (targetY - currentY) * 0.1;
+
+            lumy.style.transform = `translate(${currentX}px, ${currentY}px)`;
+
             requestAnimationFrame(moveLumy);
         }
         moveLumy();
 
+        // حرکت چشم‌ها متناسب با مکان لمس یا ماوس
         function moveEyes(event) {
-            let x = (event.clientX / window.innerWidth) * 40 - 20;
-            let y = (event.clientY / window.innerHeight) * 20 - 10;
+            let x = ((event.clientX || targetX) / window.innerWidth) * 40 - 20;
+            let y = ((event.clientY || targetY) / window.innerHeight) * 20 - 10;
             eyes.forEach(eye => {
                 eye.style.transform = `translate(${x}px, ${y}px)`;
             });
         }
 
         document.addEventListener("mousemove", moveEyes);
+        document.addEventListener("touchmove", moveEyes);
 
+        // پلک زدن
         function blink() {
             eyes.forEach(eye => eye.style.animation = "blink 0.2s ease-in-out");
             setTimeout(() => eyes.forEach(eye => eye.style.animation = ""), 200);
         }
         setInterval(blink, 3000);
 
+        // پیام‌های عاشقانه
         const messages = [
             "💖 تو همیشه بهترین و مهربون‌ترین هستی! 💖",
             "✨ با تو همه‌چیز روشن‌تر و زیباتره! ✨",
@@ -145,7 +157,13 @@
             messageElement.innerHTML = getRandomMessage();
             messageElement.style.opacity = "1";
             messageElement.style.transform = "translate(-50%, -50%) scale(1)";
+            setTimeout(() => {
+                messageElement.style.opacity = "0";
+                messageElement.style.transform = "translate(-50%, -50%) scale(0.8)";
+            }, 2000);
         }
+
+        lumy.addEventListener("click", showMessage);
     </script>
 
 </body>
